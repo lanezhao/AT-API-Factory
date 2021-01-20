@@ -1,0 +1,18 @@
+{
+  "name": "at-api-factory",
+  "version": "0.3.0",
+  "repository": "https://github.com/all-task/at-api-factory.git",
+  "author": "Lane Zhao <Lane@WiseInfo.cc>",
+  "scripts": {
+    "start": "NODE_ENV=production pm2 start ./src/index.js -i max",
+    "dev": "NODE_ENV=development nodemon --inspect ./src/index.js"
+  },
+  "dependencies": {
+    "sqlite3": "^5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
