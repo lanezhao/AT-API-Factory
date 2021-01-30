@@ -2,18 +2,22 @@ module.exports = {
   api: {
     v1: {
       projects: {
-        GET(req, res) {
+        GET(req, res, obj) {
           console.log(req, res);
+          // console.log(res.setHeader);
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(obj));
         },
-        POST(req, res) {
+        POST(req, res, obj) {
           console.log(req, res);
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(obj));
         },
         ':id': {
           GET(req, res, {
             path,
             params,
             query,
-            hash,
             fullPath,
             // matched,
             // name,
@@ -25,9 +29,15 @@ module.exports = {
               path,
               params,
               query,
-              hash,
               fullPath,
             );
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              path,
+              params,
+              query,
+              fullPath,
+            }));
           },
           paths: {
             GET() {
