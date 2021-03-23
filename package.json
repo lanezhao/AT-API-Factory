@@ -3,12 +3,14 @@
   "version": "0.3.0",
   "repository": "https://github.com/all-task/at-api-factory.git",
   "author": "Lane Zhao <Lane@WiseInfo.cc>",
+  "license": "Apache-2.0 License",
   "scripts": {
     "start": "NODE_ENV=production pm2 start ./src/index.js -i max",
     "dev": "NODE_ENV=development nodemon --inspect ./src/index.js"
   },
   "dependencies": {
-    "sqlite3": "^5.0.1"
+    "sqlite3": "^5.0.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^7.18.0",

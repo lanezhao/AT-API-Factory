@@ -4,7 +4,9 @@ const url = require('url');
 
 // const cookie = require('cookie');
 
-const methods = require('./methods');
+// const methods = require('./methods');
+
+const matchingRoute = require('./matchingRoute');
 
 const self = require('../controllers/self');
 
@@ -28,49 +30,24 @@ http.createServer((req, res) => {
       query,
     } = url.parse(req.url, true);
 
-    const matchingRoute = pathname.split('/').filter((item) => (item !== '')).reduce((acc, cur, idx, src) => {
-      if (!acc.isMatched) {
-        if (acc.matched[cur] !== undefined) {
-          acc.matched = acc.matched[cur];
-        } else {
-          const dynamic = Object.keys(acc.matched).filter((route) => (/^:/.test(route)));
-          if (dynamic.length) {
-            acc.matched = acc.matched[dynamic[0]];
-            acc.params[dynamic[0].substring(1)] = cur;
-          }
-        }
-        if (idx === src.length - 1) {
-          if (acc.matched[req.method.toLocaleUpperCase()] !== undefined) {
-            acc.matched = acc.matched[req.method.toLocaleUpperCase()];
-            acc.isMatched = true;
-          } else {
-            res.writeHead(405, {
-              Allow: Object.keys(methods)
-                .filter((method) => (Object.keys(acc.matched).includes(method))).join(', '),
-            });
-            res.end();
-          }
-        }
-      }
-      return acc;
-    }, {
-      isMatched: false,
-      matched: router,
-      params: {},
+    const matchedRoute = matchingRoute({
+      req,
+      res,
+      path: pathname,
+      router,
     });
 
-    console.log(matchingRoute);
+    console.log(matchedRoute);
 
-    if (matchingRoute.isMatched) {
+    if (matchedRoute.isMatched) {
       req.on('end', () => {
         const reqBodyString = Buffer.concat(reqBodyBuffer).toString();
-        console.log('reqBodyString', reqBodyString);
         if (reqBodyString) {
           reqBody = JSON.parse(reqBodyString);
         }
-        matchingRoute.matched.apply(store, [req, res, {
+        matchedRoute.matched.apply(store, [req, res, {
           path: pathname,
-          params: matchingRoute.params,
+          params: matchedRoute.params,
           query,
           body: reqBody,
         }]);
